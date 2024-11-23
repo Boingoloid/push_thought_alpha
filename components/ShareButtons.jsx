@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image';
+
 import {
   FacebookShareButton,
   TwitterShareButton,
@@ -34,40 +35,55 @@ const ShareButtons = ({ campaign, socialData }) => {
   const [showToastInfo, setShowToastInfo] = useState(true)
 
   const MySwal = withReactContent(Swal)
- 
-   const mysweetClick = () => {
+  const SocialSwal = withReactContent(Swal)
+
+  const socialSweetClick = () => {
+    SocialSwal.fire({
+      title: "Your post was successful.",
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: () => {
+        // Swal.showLoading();
+      },
+      willClose: () => {
+        // clearInterval(timerInterval);
+      }
+    })
+  }
+
+  const mysweetClick = () => {
     if (showToastInfo) {
-    MySwal.fire({
-        title: "Did you send your message? Confirm below to be counted in our metrics.",
+      MySwal.fire({
+        title: `Your message text will be: \n ${twitterAddress} ${campaign.name} ${shareUrl}`,
         cancelButtonText: "No",
         showCancelButton: true,
         confirmButtonText: "Yes"
-    })
+      })
         .then((result) => {
-            ++count;
-            console.log("count:", count)
-            if (result.isConfirmed) {
-                setMessageSent("Yes")
-                console.log("In the `isConfirmed` block")
-                setShowToastInfo(false)
-                // handleSubmitTest()
-                Swal.close()
-            } else if (result.isDismissed && count > 1) {
-                // && count > 1
-                setShowToastInfo(true)
-                // handleSubmitTest()
-                // Swal.close()
-                setMessageSent("No")
-                console.log("In the dismissed")
-                // if (result.isConfirmed) {
-                //     console.log("In the dismissed")
-                // }
+          ++count;
+          console.log("count:", count)
+          if (result.isConfirmed) {
+            setMessageSent("Yes")
+            console.log("In the `isConfirmed` block")
+            setShowToastInfo(false)
+            // handleSubmitTest()
+            Swal.close()
+          } else if (result.isDismissed && count > 1) {
+            // && count > 1
+            setShowToastInfo(true)
+            // handleSubmitTest()
+            // Swal.close()
+            setMessageSent("No")
+            console.log("In the dismissed")
+            // if (result.isConfirmed) {
+            //     console.log("In the dismissed")
+            // }
 
-            }
+          }
 
         });
     }
-}
+  }
 
   const CloseButton = ({ closeToast }) => {
     return (
@@ -83,10 +99,6 @@ const ShareButtons = ({ campaign, socialData }) => {
   }
 
   const displayXMsg = () => {
-    // toast(<ToastInfo
-    //   // messageSent={messageSent}
-    //   setMessageSent={setMessageSent}
-    // />)
 
     return (
       (<ToastInfo
@@ -118,18 +130,43 @@ const ShareButtons = ({ campaign, socialData }) => {
   const facebookAddress = campaign?.target_facebook?.address || '';
   const twitterAddress = campaign?.target_x?.address || '';
 
+  // console.log("CAMPAIGN REPOST ID: " + campaign.x_repost_id)
+
   const xClosed = () => {
+    console.log("CAMPAIGN REPOST ID: " + campaign.x_repost_id);
+
+    fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/tweet`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tweetMessage: `${twitterAddress} ${campaign.name} \n ${shareUrl}` }),
+    })
+      .then((response) => {
+        return response.json()
+      })
+      .then((result) => {
+        console.log('result', result)
+        socialSweetClick()
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+
+
     // console.log("just closed X")
     // if (messageSent === "Yes") {
     //   return;
     // }
     // setShowToastInfo(true)
-    mysweetClick()
+    // mysweetClick()
     // if ( messageSent === "No") {
     //   setShowToastInfo(true)
     // } else if (messageSent === "Yes") {
     //   setShowToastInfo(false)
     // }
+  }
+
+  const fcClosed = () => {
+    console.log("Facebook")
   }
 
   return (
@@ -147,13 +184,18 @@ const ShareButtons = ({ campaign, socialData }) => {
         closeButton={CloseButton}
       /> */}
       <div className="flex gap-3 justify-center pb-1 pt-1">
-        <FacebookShareButton className='justify-center'
+        {/* <FacebookShareButton className='justify-center'
           url={shareUrl}
           // quote={`${campaign.name} ${campaign.target_facebook.address}`}
           hashtag={`${campaign.name} ${facebookAddress} #pushthought`}
         >
           <FaFacebookF size={40} round={true} />
-        </FacebookShareButton>
+        </FacebookShareButton> */}
+        <div>
+          <FaFacebookF size={40} round={true}
+            className='hover:cursor-pointer'
+            onClick={fcClosed} />
+        </div>
         {/* <IoCheckmarkCircleSharp
           style={{ color: "#018749", width: "24px", height: "24px", position: "relative", right: "25px", bottom: "4px" }}
           className={clsx({
@@ -171,7 +213,7 @@ const ShareButtons = ({ campaign, socialData }) => {
           })}
         />
 
-        <TwitterShareButton className='justify-center'
+        {/* <TwitterShareButton className='justify-center'
           url={shareUrl}
           // title={campaign.name}
           // title={social !== null && social.length > 0 && `${social[0]['Twitter']} ${campaign.name}`}
@@ -180,7 +222,10 @@ const ShareButtons = ({ campaign, socialData }) => {
           onShareWindowClose={xClosed}
         >
           <BsTwitterX size={40} round={true} />
-        </TwitterShareButton>
+        </TwitterShareButton> */}
+        <div>
+          <BsTwitterX size={40} round={true} className='hover:cursor-pointer' onClick={xClosed} />
+        </div>
         {/* <ImCheckmark
           style={{ color: "#018749", width: "24px", height: "24px", position: "relative", right: "30px", bottom: "4px" }}
           className={clsx({

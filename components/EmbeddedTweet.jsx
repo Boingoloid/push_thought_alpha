@@ -2,10 +2,28 @@
 // components/EmbeddedTweet.js
 import { TwitterTweetEmbed } from 'react-twitter-embed';
 import { XEmbed } from 'react-social-media-embed';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content'
 
 import { useState } from 'react'
 
 const apiDomain = process.env.NEXT_PUBLIC_API_DOMAIN || null
+
+const SocialSwal = withReactContent(Swal)
+
+const socialSweetClick = () => {
+    SocialSwal.fire({
+        title: "Your post was successful.",
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: () => {
+            // Swal.showLoading();
+        },
+        willClose: () => {
+            // clearInterval(timerInterval);
+        }
+    })
+}
 
 const EmbeddedTweet = ({ tweetId }) => {
     const handleRetweet = async (tweetId) => {
@@ -22,6 +40,10 @@ const EmbeddedTweet = ({ tweetId }) => {
             })
             .then((result) => {
                 console.log('result', result)
+                socialSweetClick()
+            })
+            .catch((err) => {
+                console.log(err)
             })
 
         // try {

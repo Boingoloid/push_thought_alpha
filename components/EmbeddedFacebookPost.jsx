@@ -9,30 +9,13 @@ const EmbeddedFacebookPost = ({ postUrl }) => {
         }
     }, [postUrl]);
 
-    const handleRetweet = () => {
+    const handleRepost = () => {
         // const retweetUrl = `https://twitter.com/intent/retweet?tweet_id=${tweetId}`;
         // window.open(retweetUrl, '_blank');
     };
 
     return (
         <div>
-            {/* Facebook post embed element
-            <div
-                className="fb-post"
-                data-href={postUrl}
-                data-width="500"
-                style={{
-                    margin: '0 auto', // Center the embedded post
-                }}
-            >
-                facebook
-            </div> */}
-
-            {/* <TwitterTweetEmbed tweetId={tweetId} /> */}
-
-            {/* <XEmbed url="https://twitter.com/PixelAndBracket/status/1356633038717923333" width={325} /> */}
-
-            {/* Button to retweet */}
             <div
                 style={{
                     display: 'flex',    // Flexbox to center the button
@@ -41,7 +24,7 @@ const EmbeddedFacebookPost = ({ postUrl }) => {
                     marginBottom: '10px',
                 }}
             >
-                <button onClick={handleRetweet}
+                <button onClick={handleRepost}
                     style={{
                         // marginTop: '10px',
                         marginBottom: '10px',
