@@ -29,7 +29,7 @@ let count = 0;
 const ShareButtons = ({ campaign, socialData }) => {
   const shareUrl = `${process.env.NEXT_PUBLIC_DOMAIN}/campaigns/${campaign._id}`
   const [social, setSocial] = useState([])
-  const [isShowingX, setIsShowingX] = useState(true)
+  const [isShowingX, setIsShowingX] = useState(false)
   const [isShowingFB, setIsShowingFB] = useState(false)
   const [messageSent, setMessageSent] = useState("")
   const [showToastInfo, setShowToastInfo] = useState(true)

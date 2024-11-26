@@ -113,16 +113,10 @@ const CampaignContactForm = ({ campaign, setSocialData }) => {
 
         </TabPanel>
       </Tabs>
-
-
-
-
-
-
-
-
-
       <h3 className="text-xl font-bold mb-3">2. Contact the Decision Maker</h3>
+      <div>
+        <input />
+      </div>
       <div className="mb-6">
         <div className="mb-6 flex items-center justify-between">
           <div className="flex flex-col">
